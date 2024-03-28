@@ -36,6 +36,52 @@ The library can be imported in the usual way:
 
     from parsial import parsial
 
+Example
+^^^^^^^
+
+.. |parsial| replace:: ``parsial``
+.. _parsial: https://parsial.readthedocs.io/en/0.1.0/_source/parsial.html#parsial.parsial.parsial
+
+The |parsial|_ function accepts a parsing function (that takes a string input) and returns a new parsing function. This new function attempts to parse an input string using the original parsing function *even if parsing errors occur*. This is accomplished by selectively removing portions of the input that cause errors:
+
+.. code-block:: python
+
+    >>> lines = [
+    ...     'x = 123',
+    ...     'y =',
+    ...     'print(x)',
+    ...     'z = x +',
+    ...     'print(2 * x)'
+    ... ]
+    >>> import ast
+    >>> parser = parsial(ast.parse)
+    >>> (a, slices) = parser('\\n'.join(lines))
+    >>> exec(compile(a, '', 'exec'))
+    123
+    246
+
+.. |slice| replace:: ``slice``
+.. _slice: https://docs.python.org/3/library/functions.html#slice
+
+In addition to returning the result, the new function also returns a list of |slice|_ instances (one for each line found in the input string):
+
+.. code-block:: python
+
+    >>> for s in slices:
+    ...     print(s)
+    slice(0, 7, None)
+    slice(0, 0, None)
+    slice(0, 8, None)
+    slice(0, 0, None)
+    slice(0, 12, None)
+    
+Each |slice|_ instance indicates what portion of the corresponding line in the input was included in the successful parsing attempt:
+
+.. code-block:: python
+
+    >>> [l[s] for (l, s) in zip(lines, slices)]
+    ['x = 123', '', 'print(x)', '', 'print(2 * x)']
+
 Development
 -----------
 All installation and development dependencies are fully specified in ``pyproject.toml``. The ``project.optional-dependencies`` object is used to `specify optional requirements <https://peps.python.org/pep-0621>`__ for various development tasks. This makes it possible to specify additional options (such as ``docs``, ``lint``, and so on) when performing installation using `pip <https://pypi.org/project/pip>`__:
