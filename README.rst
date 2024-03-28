@@ -2,9 +2,9 @@
 parsial
 =======
 
-Python library that transforms any string parser into a parser that skips lines containing syntax errors.
+Python library that transforms any string parser into a parser that skips portions of the input that contain syntax errors.
 
-|pypi| |readthedocs|
+|pypi| |readthedocs| |actions| |coveralls|
 
 .. |pypi| image:: https://badge.fury.io/py/parsial.svg#
    :target: https://badge.fury.io/py/parsial
@@ -13,6 +13,14 @@ Python library that transforms any string parser into a parser that skips lines 
 .. |readthedocs| image:: https://readthedocs.org/projects/parsial/badge/?version=latest
    :target: https://parsial.readthedocs.io/en/latest/?badge=latest
    :alt: Read the Docs documentation status.
+
+.. |actions| image:: https://github.com/reity/parsial/workflows/lint-test-cover-docs/badge.svg#
+   :target: https://github.com/reity/parsial/actions/workflows/lint-test-cover-docs.yml
+   :alt: GitHub Actions status.
+
+.. |coveralls| image:: https://coveralls.io/repos/github/reity/parsial/badge.svg?branch=main
+   :target: https://coveralls.io/github/reity/parsial?branch=main
+   :alt: Coveralls test coverage summary.
 
 Installation and Usage
 ----------------------
@@ -30,11 +38,11 @@ The library can be imported in the usual way:
 
 Development
 -----------
-All installation and development dependencies are fully specified in ``pyproject.toml``. The ``project.optional-dependencies`` object is used to `specify optional requirements <https://peps.python.org/pep-0621>`__ for various development tasks. This makes it possible to specify additional options (such as ``docs``) when performing installation using `pip <https://pypi.org/project/pip>`__:
+All installation and development dependencies are fully specified in ``pyproject.toml``. The ``project.optional-dependencies`` object is used to `specify optional requirements <https://peps.python.org/pep-0621>`__ for various development tasks. This makes it possible to specify additional options (such as ``docs``, ``lint``, and so on) when performing installation using `pip <https://pypi.org/project/pip>`__:
 
 .. code-block:: bash
 
-    python -m pip install .[docs]
+    python -m pip install .[docs,lint]
 
 Documentation
 ^^^^^^^^^^^^^
@@ -45,6 +53,28 @@ The documentation can be generated automatically from the source files using `Sp
     python -m pip install .[docs]
     cd docs
     sphinx-apidoc -f -E --templatedir=_templates -o _source .. && make html
+
+Testing and Conventions
+^^^^^^^^^^^^^^^^^^^^^^^
+All unit tests are executed and their coverage is measured when using `pytest <https://docs.pytest.org>`__ (see the ``pyproject.toml`` file for configuration details):
+
+.. code-block:: bash
+
+    python -m pip install .[test]
+    python -m pytest
+
+Alternatively, all unit tests are included in the module itself and can be executed using `doctest <https://docs.python.org/3/library/doctest.html>`__:
+
+.. code-block:: bash
+
+    python src/parsial/parsial.py -v
+
+Style conventions are enforced using `Pylint <https://pylint.readthedocs.io>`__:
+
+.. code-block:: bash
+
+    python -m pip install .[lint]
+    python -m pylint src/parsial
 
 Contributions
 ^^^^^^^^^^^^^

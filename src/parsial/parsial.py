@@ -1,6 +1,6 @@
 """
 Python library that transforms any string parser into a parser
-that skips lines containing syntax errors.
+that skips portions of the input that contain syntax errors.
 """
 from __future__ import annotations
 from typing import Any, List, Callable
@@ -41,4 +41,4 @@ def parsial(parse: Callable[[str], Any]) -> Callable[[str], List[int]]:
     return parse_
 
 if __name__ == '__main__':
-    doctest.testmod()
+    doctest.testmod() # pragma: no cover
